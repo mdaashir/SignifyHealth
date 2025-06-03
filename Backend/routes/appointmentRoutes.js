@@ -132,7 +132,7 @@ router.get('/doctor/:doctorId/date/:appointmentDate', (req, res) => {
 				return res.status(500).json({ error: 'Internal server error' });
 			}
 			const rowDataPacket = results[0][0]?.appointment_details;
-			const appointments = rowDataPacket ? JSON.parse(rowDataPacket) : [];
+			const appointments = rowDataPacket ? rowDataPacket : [];
 			console.log('Fetched data: ', appointments);
 
 			if (!appointments.length) {
@@ -179,7 +179,7 @@ router.get('/patient/:patientId', (req, res) => {
 				return res.status(500).json({ error: 'Internal server error' });
 			}
 			const rowDataPacket = results[0][0]?.appointment_details;
-			const appointments = rowDataPacket ? JSON.parse(rowDataPacket) : [];
+			const appointments = rowDataPacket ? rowDataPacket : [];
 			console.log('Fetched data: ', appointments);
 
 			if (!appointments.length) {
@@ -228,7 +228,7 @@ router.get('/date/:appointmentDate', (req, res) => {
 				return res.status(500).json({ error: 'Internal server error' });
 			}
 			const rowDataPacket = results[0][0]?.appointment_details;
-			const appointments = rowDataPacket ? JSON.parse(rowDataPacket) : [];
+			const appointments = rowDataPacket ? rowDataPacket : [];
 			console.log('Fetched data: ', appointments);
 
 			if (!appointments.length) {

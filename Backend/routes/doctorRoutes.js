@@ -95,7 +95,7 @@ router.get('/', (_, res) => {
 
 			const rowDataPacket = results[0][0].doctors;
 			//console.log('patient_details: ', rowDataPacket);
-			const doctors_data = JSON.parse(rowDataPacket);
+			const doctors_data = rowDataPacket;
 			console.log('Fetched data: ', doctors_data);
 			//console.log(results);
 			//console.log('%d',results.length)
@@ -151,7 +151,7 @@ router.get('/:doctorId', (req, res) => {
 			}
 
 			const rowDataPacket = results[0][0].doctor_details;
-			const doctors_data = JSON.parse(rowDataPacket);
+			const doctors_data = rowDataPacket;
 			console.log('Fetched data: ', doctors_data);
 			//console.log(results);
 			//console.log('%d',results.length)
@@ -209,7 +209,7 @@ router.get('/department/:departmentName', (req, res) => {
 			}
 
 			const rowDataPacket = results[0][0].doctors_spec;
-			const doctors_data = JSON.parse(rowDataPacket);
+			const doctors_data = rowDataPacket;
 			console.log('Fetched data: ', doctors_data);
 			//console.log(results);
 			//console.log('%d',results.length)

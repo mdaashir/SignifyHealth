@@ -197,7 +197,7 @@ router.get('/', (_, res) => {
 		try {
 			const rowDataPacket = results[0][0].patients;
 			//console.log('patient_details: ', rowDataPacket);
-			const patients_data = JSON.parse(rowDataPacket);
+			const patients_data = rowDataPacket;
 			console.log('Fetched all patients:', patients_data);
 			//console.log(results);
 			//console.log('%d',results.length)

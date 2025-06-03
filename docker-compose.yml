@@ -1,40 +1,70 @@
 services:
   frontend:
     build:
-      context: .
-      dockerfile: Frontend/Dockerfile
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: sh-frontend
+    restart: always
+    environment:
+      - VITE_PROD_BACKEND_URL=http://localhost:9021
     ports:
-      - "80:80"
+      - '5174:80'
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+    networks:
+      - sh
 
   backend:
     build:
-      context: .
-      dockerfile: Backend/Dockerfile
-    ports:
-      - "9021:9021"
-    volumes:
-      - ./backend:/app
-    # command: ["node", "backend/executeSqlFile.js", "&&", "npm", "run", "start"]  # Run SQL before starting the server
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: sh-backend
     restart: always
+    ports:
+      - '9021:9021'
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=hospital
+      - PORT=9021
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - sh
+    command: ['sh', '-c', 'node executeSqlFile.js && npm run start']
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9021/']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
-  # Optional MySQL service
-  # mysql:
-  #   image: mysql:8.0
-  #   container_name: mysql
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: password  # Set the root password for the MySQL container
-  #     MYSQL_DATABASE: mydatabase     # Set default database
-  #     MYSQL_USER: user               # Set a user for your MySQL database
-  #     MYSQL_PASSWORD: password       # Set the user's password
-  #   ports:
-  #     - "3306:3306"
-  #   volumes:
-  #     - mysql-data:/var/lib/mysql
-  #   networks:
-  #     - backend-network
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=hospital
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - sh
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
-  # networks:
-  #  backend-network:
-  #   driver: bridge
+volumes:
+  mysql_data:
+    name: sh_mysql_data
+
+networks:
+  sh:
+    driver: bridge

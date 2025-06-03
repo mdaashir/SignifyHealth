@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 dotenv.config();
 
